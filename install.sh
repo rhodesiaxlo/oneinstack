@@ -185,6 +185,8 @@ while :; do
     [ -n "$(echo ${php_extensions} | grep -w mongodb)" ] && pecl_mongodb=1
     [ -n "$(echo ${php_extensions} | grep -w swoole)" ] && pecl_swoole=1
     [ -n "$(echo ${php_extensions} | grep -w xdebug)" ] && pecl_xdebug=1
+    [ -n "$(echo ${php_extensions} | grep -w grpc)" ] && pecl_grpc=1
+    [ -n "$(echo ${php_extensions} | grep -w pcntl)" ] && pecl_pcntl=1
     ;;
   --nodejs)
     nodejs_flag=y
@@ -789,11 +791,13 @@ if [ ${ARG_NUM} == 0 ]; then
       echo -e "\t${CMSG}14${CEND}. Install mongodb"
       echo -e "\t${CMSG}15${CEND}. Install swoole"
       echo -e "\t${CMSG}16${CEND}. Install xdebug(PHP>=5.5)"
+      echo -e "\t${CMSG}17${CEND}. Install grpc"
+      echo -e "\t${CMSG}18${CEND}. Install pcntl"
       read -e -p "Please input numbers:(Default '4 11 12' press Enter) " phpext_option
       phpext_option=${phpext_option:-'4 11 12'}
       [ "${phpext_option}" == '0' ] && break
       array_phpext=(${phpext_option})
-      array_all=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
+      array_all=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)
       for v in ${array_phpext[@]}
       do
         [ -z "`echo ${array_all[@]} | grep -w ${v}`" ] && phpext_flag=1
@@ -819,6 +823,8 @@ if [ ${ARG_NUM} == 0 ]; then
         [ -n "`echo ${array_phpext[@]} | grep -w 14`" ] && pecl_mongodb=1
         [ -n "`echo ${array_phpext[@]} | grep -w 15`" ] && pecl_swoole=1
         [ -n "`echo ${array_phpext[@]} | grep -w 16`" ] && pecl_xdebug=1
+        [ -n "`echo ${array_phpext[@]} | grep -w 17`" ] && pecl_grpc=1
+        [ -n "`echo ${array_phpext[@]} | grep -w 18`" ] && pecl_pcntl=1
         break
       fi
     done
@@ -1228,6 +1234,17 @@ PHP_addons() {
   if [ "${pecl_xdebug}" == '1' ]; then
     . include/pecl_xdebug.sh
     Install_pecl_xdebug 2>&1 | tee -a ${oneinstack_dir}/install.log
+  fi
+
+  # 在执行部分添加gRPC安装
+  if [ "${pecl_grpc}" == '1' ]; then
+      . include/pecl_grpc.sh
+      Install_pecl_grpc 2>&1 | tee -a ${oneinstack_dir}/install.log
+  fi
+
+  if [ "${pecl_pcntl}" == '1' ]; then
+    . include/pecl_pcntl.sh
+    Install_pecl_pcntl 2>&1 | tee -a ${oneinstack_dir}/install.log
   fi
 
   # pecl_pgsql
