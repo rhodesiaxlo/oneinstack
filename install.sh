@@ -322,19 +322,19 @@ if [ ${ARG_NUM} == 0 ] && [ ! -e ~/.oneinstack ]; then
   done
 fi
 if [ "${md5sum_flag}" == 'y' ]; then
+  oneinstack_file=
   [ -e "${oneinstack_dir}.tar.gz" ] && oneinstack_file=${oneinstack_dir}.tar.gz
   [ -e "${oneinstack_dir}-full.tar.gz" ] && oneinstack_file=${oneinstack_dir}-full.tar.gz
-  oneinstack_tgz=${oneinstack_file##*/}
-  if [ -e "${oneinstack_file}" ]; then
+  if [ -z "${oneinstack_file}" ]; then
+    echo "${CWARNING}Local installation package not found, skip md5 check${CEND}"
+  else
+    oneinstack_tgz=${oneinstack_file##*/}
     now_oneinstack_md5=$(md5sum ${oneinstack_file} | awk '{print $1}')
     latest_oneinStack_md5=$(curl --connect-timeout 3 -m 5 -s ${mirror_link}/md5sum.txt | grep ${oneinstack_tgz} | awk '{print $1}')
     if [ "${now_oneinstack_md5}" != "${latest_oneinStack_md5}" ]; then
       echo "${CFAILURE}Error: The md5 value of the installation package does not match the official website, please download again, url: ${mirror_link}/${oneinstack_tgz}${CEND}"
       exit 1
     fi
-  else
-    echo "${CFAILURE}Error: ${oneinstack_file} does not exist${CEND}"
-    exit 1
   fi
 fi
 
