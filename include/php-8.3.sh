@@ -93,8 +93,14 @@ Install_PHP83() {
   tar xzf php-${php83_ver}.tar.gz
   pushd php-${php83_ver} > /dev/null
   make clean
-  export CC=gcc
-  export CFLAGS="${CFLAGS} -std=gnu11"
+  if command -v clang >/dev/null 2>&1; then
+    export CC=clang
+    export CFLAGS="${CFLAGS} -std=c11"
+  else
+    export CC=gcc
+    export CFLAGS="${CFLAGS} -std=gnu11 -D__STDC_NO_ATOMICS__=1"
+    export LDFLAGS="${LDFLAGS} -latomic"
+  fi
   export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/:$PKG_CONFIG_PATH
   [ ! -d "${php_install_dir}" ] && mkdir -p ${php_install_dir}
   [ "${phpcache_option}" == '1' ] && phpcache_arg='--enable-opcache' || phpcache_arg='--disable-opcache'
@@ -121,7 +127,7 @@ Install_PHP83() {
     --with-mhash --enable-pcntl --enable-sockets --enable-ftp --enable-intl --with-xsl \
     --with-gettext --with-zip=/usr/local --enable-soap --disable-debug ${php_modules_options}
   fi
-  make ZEND_EXTRA_LIBS='-liconv' -j ${THREAD}
+  make ZEND_EXTRA_LIBS='-liconv -latomic' -j ${THREAD}
   make install
 
   if [ -e "${php_install_dir}/bin/phpize" ]; then
