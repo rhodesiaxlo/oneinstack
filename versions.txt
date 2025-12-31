@@ -55,6 +55,7 @@ php81_ver=8.1.27
 php82_ver=8.2.14
 php83_ver=8.3.2
 php84_ver=8.4.4
+php85_ver=8.5.1
 
 # Nodejs
 nodejs_ver=20.10.0
