@@ -794,8 +794,8 @@ if [ ${ARG_NUM} == 0 ]; then
       echo -e "\t${CMSG}16${CEND}. Install xdebug(PHP>=5.5)"
       echo -e "\t${CMSG}17${CEND}. Install grpc"
       echo -e "\t${CMSG}18${CEND}. Install pcntl"
-      read -e -p "Please input numbers:(Default '4 11 12' press Enter) " phpext_option
-      phpext_option=${phpext_option:-'4 11 12'}
+      read -e -p "Please input numbers:(Default ' 4 6 11 14 15 17 18' press Enter) " phpext_option
+      phpext_option=${phpext_option:-' 4 6 11 14 15 17 18 '}
       [ "${phpext_option}" == '0' ] && break
       array_phpext=(${phpext_option})
       array_all=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)
