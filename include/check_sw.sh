@@ -80,6 +80,17 @@ installDepsRHEL() {
       fi
     fi
     systemctl enable chronyd
+  elif [ "${RHEL_ver}" == '10' ]; then
+    if [[ "${Platform}" =~ "rhel" ]]; then
+      dnf -y --enablerepo=crb install chrony oniguruma-devel rpcgen
+    elif [[ "${Platform}" =~ "ol" ]]; then
+      dnf config-manager --set-enabled ol10_codeready_builder
+      dnf -y install chrony oniguruma-devel rpcgen
+    else
+      dnf config-manager --set-enabled crb >/dev/null 2>&1 || true
+      dnf -y --enablerepo=crb install chrony oniguruma-devel rpcgen
+    fi
+    systemctl enable chronyd
   elif [ "${RHEL_ver}" == '7' ]; then
     [ -z "`grep -w epel /etc/yum.repos.d/*.repo`" ] && yum -y install epel-release
     yum -y groupremove "Basic Web Server" "MySQL Database server" "MySQL Database client"
