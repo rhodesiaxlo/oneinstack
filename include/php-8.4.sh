@@ -23,6 +23,8 @@ Install_PHP84() {
     tar xzf php-${PHP_version}.tar.gz
     pushd php-${PHP_version} > /dev/null
     make clean
+    export CC=gcc
+    export CFLAGS="${CFLAGS} -std=gnu11"
     [ ! -d "${php_install_dir}" ] && mkdir -p ${php_install_dir}
     
     # PHP 8.4 特定的编译选项
@@ -40,7 +42,7 @@ Install_PHP84() {
     --with-zlib \
     --with-zip \
     --with-curl \
-    --with-iconv \
+    --with-iconv=/usr/local/ \
     --with-gettext \
     --with-readline \
     --with-ldapsasl \

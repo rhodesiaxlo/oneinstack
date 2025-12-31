@@ -93,6 +93,8 @@ Install_PHP83() {
   tar xzf php-${php83_ver}.tar.gz
   pushd php-${php83_ver} > /dev/null
   make clean
+  export CC=gcc
+  export CFLAGS="${CFLAGS} -std=gnu11"
   export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/:$PKG_CONFIG_PATH
   [ ! -d "${php_install_dir}" ] && mkdir -p ${php_install_dir}
   [ "${phpcache_option}" == '1' ] && phpcache_arg='--enable-opcache' || phpcache_arg='--disable-opcache'
