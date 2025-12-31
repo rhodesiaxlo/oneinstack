@@ -40,6 +40,19 @@ version() {
   echo "updated date: 2023-02-04"
 }
 
+Ensure_Oniguruma() {
+  if ! pkg-config --exists oniguruma >/dev/null 2>&1; then
+    if [ "${Family}" == 'rhel' ]; then
+      dnf -y install oniguruma oniguruma-devel >/dev/null 2>&1 || {
+        dnf config-manager --set-enabled crb >/dev/null 2>&1
+        dnf -y --enablerepo=crb install oniguruma oniguruma-devel >/dev/null 2>&1 || yum -y install oniguruma oniguruma-devel >/dev/null 2>&1
+      }
+    elif [ "${Family}" == 'debian' ] || [ "${Family}" == 'ubuntu' ]; then
+      apt-get --no-install-recommends -y install libonig-dev >/dev/null 2>&1
+    fi
+  fi
+}
+
 Show_Help() {
   version
   echo "Usage: $0  command ...[parameters]....
@@ -1101,10 +1114,12 @@ case "${php_option}" in
     Install_PHP83 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
   14)
+    Ensure_Oniguruma
     . include/php-8.4.sh
     Install_PHP84 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
   15)
+    Ensure_Oniguruma
     . include/php-8.5.sh
     Install_PHP85 2>&1 | tee -a ${oneinstack_dir}/install.log
     ;;
