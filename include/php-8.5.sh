@@ -19,6 +19,21 @@ Install_PHP85() {
     # 下载和校验
     src_url=https://www.php.net/distributions/php-${PHP_version}.tar.gz && Download_src
     
+    if [ ! -e "/usr/local/lib/libiconv.la" ]; then
+      tar xzf libiconv-${libiconv_ver}.tar.gz
+      pushd libiconv-${libiconv_ver} > /dev/null
+      ./configure
+      make -j ${THREAD} && make install
+      popd > /dev/null
+      rm -rf libiconv-${libiconv_ver}
+    fi
+    [ -z "`grep /usr/local/lib /etc/ld.so.conf.d/*.conf`" ] && echo '/usr/local/lib' > /etc/ld.so.conf.d/local.conf
+    ldconfig
+    export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/:$PKG_CONFIG_PATH
+    export CPPFLAGS="-I/usr/local/include ${CPPFLAGS}"
+    export LDFLAGS="-L/usr/local/lib ${LDFLAGS}"
+    export LIBS="-liconv ${LIBS}"
+
     # 编译安装
     tar xzf php-${PHP_version}.tar.gz
     pushd php-${PHP_version} > /dev/null
@@ -40,7 +55,7 @@ Install_PHP85() {
     --with-zlib \
     --with-zip \
     --with-curl \
-    --with-iconv \
+    --with-iconv=/usr/local/ \
     --with-gettext \
     --with-readline \
     --with-ldapsasl \
@@ -66,7 +81,7 @@ Install_PHP85() {
     --disable-phar \
     --disable-rpath
 
-    make -j ${THREAD} && make install
+    make ZEND_EXTRA_LIBS='-liconv' -j ${THREAD} && make install
     
     if [ -e "${php_install_dir}/bin/phpize" ]; then
       # php.ini配置
