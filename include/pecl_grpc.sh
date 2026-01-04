@@ -50,9 +50,13 @@ Install_pecl_grpc() {
     
     # 编译安装
     ${php_install_dir}/bin/phpize
-    ./configure --with-php-config=${php_install_dir}/bin/php-config \
-                --with-grpc \
-                --with-openssl-dir=${openssl_install_dir}
+    OPENSSL_VER_STR=$(openssl version 2>/dev/null)
+    if echo "${OPENSSL_VER_STR}" | grep -Eqi 'OpenSSL 3|OpenSSL 1\.1'; then
+      OPENSSL_ARGS="--with-grpc"
+    else
+      OPENSSL_ARGS="--with-grpc --with-openssl-dir=${openssl_install_dir}"
+    fi
+    ./configure --with-php-config=${php_install_dir}/bin/php-config ${OPENSSL_ARGS}
     
     echo "${CMSG}Compiling gRPC extension (this may take several minutes)... ${CEND}"
     make -j ${THREAD} && make install

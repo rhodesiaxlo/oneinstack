@@ -154,3 +154,25 @@ systemctl {start|stop|status|restart|reload} memcached
 For feedback, questions, and to follow the progress of the project: <br />
 [Telegram Group](https://t.me/oneinstackn)<br />
 [OneinStack](https://oneinstack.com)<br />
+
+
+
+update
+sudo dnf install epel-release -y
+
+sudo dnf groupinstall "Development Tools" -y
+sudo dnf update -y
+
+sudo dnf install -y libxml2-devel bzip2-devel curl-devel libpng-devel libjpeg-devel freetype-devel libXpm-devel gmp-devel libmcrypt-devel mariadb-devel aspell-devel recode-devel autoconf bison re2c libicu-devel oniguruma-devel
+
+
+sudo dnf install epel-release -y
+
+
+
+sudo groupadd www
+sudo useradd -g www www
+
+rd of MySQL(default: YmvDFxsE)
+
+Please input the root password of MySQL(default: 5amoXpsZ):
