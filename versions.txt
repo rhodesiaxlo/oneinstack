@@ -135,3 +135,5 @@ fail2ban_ver=master
 
 grpc_ver=1.60.0
 grpc_oldver=1.48.0
+protobuf_ver=4.33.2
+protobuf_oldver=3.25.8

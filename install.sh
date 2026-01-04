@@ -68,7 +68,7 @@ Show_Help() {
   --phpcache_option [1-4]     Install PHP opcode cache, default: 1 opcache
   --php_extensions [ext name] Install PHP extensions, include zendguardloader,ioncube,
                               sourceguardian,imagick,gmagick,fileinfo,imap,ldap,calendar,phalcon,
-                              yaf,yar,redis,memcached,memcache,mongodb,swoole,xdebug
+                              yaf,yar,redis,memcached,memcache,mongodb,swoole,protobuf,grpc,pcntl,xdebug
   --nodejs                    Install Nodejs
   --tomcat_option [1-6]       Install Tomcat version
   --jdk_option [1-3]          Install JDK version
@@ -198,6 +198,7 @@ while :; do
     [ -n "$(echo ${php_extensions} | grep -w mongodb)" ] && pecl_mongodb=1
     [ -n "$(echo ${php_extensions} | grep -w swoole)" ] && pecl_swoole=1
     [ -n "$(echo ${php_extensions} | grep -w xdebug)" ] && pecl_xdebug=1
+    [ -n "$(echo ${php_extensions} | grep -w protobuf)" ] && pecl_protobuf=1
     [ -n "$(echo ${php_extensions} | grep -w grpc)" ] && pecl_grpc=1
     [ -n "$(echo ${php_extensions} | grep -w pcntl)" ] && pecl_pcntl=1
     ;;
@@ -1254,6 +1255,12 @@ PHP_addons() {
   if [ "${pecl_xdebug}" == '1' ]; then
     . include/pecl_xdebug.sh
     Install_pecl_xdebug 2>&1 | tee -a ${oneinstack_dir}/install.log
+  fi
+
+  # protobuf
+  if [ "${pecl_protobuf}" == '1' ]; then
+    . include/pecl_protobuf.sh
+    Install_pecl_protobuf 2>&1 | tee -a ${oneinstack_dir}/install.log
   fi
 
   # 在执行部分添加gRPC安装

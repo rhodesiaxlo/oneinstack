@@ -30,6 +30,9 @@ Install_PHP84() {
     [ -z "`grep /usr/local/lib /etc/ld.so.conf.d/*.conf`" ] && echo '/usr/local/lib' > /etc/ld.so.conf.d/local.conf
     ldconfig
     export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/:$PKG_CONFIG_PATH
+    export CPPFLAGS="-I/usr/local/include ${CPPFLAGS}"
+    export LDFLAGS="-L/usr/local/lib ${LDFLAGS}"
+    export LIBS="-liconv ${LIBS}"
 
     # 编译安装
     tar xzf php-${PHP_version}.tar.gz
